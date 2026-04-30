@@ -1,16 +1,15 @@
 const express = require("express");
-const State = require("./core/state");
-const { runWorkflow } = require("./core/workflow");
+const taskRoutes = require("./routes/tasks");
+const { PORT } = require("./config");
 
 const app = express();
 app.use(express.json());
+app.use(taskRoutes);
 
-app.post("/run", async (req, res) => {
-  const state = new State(req.body.prompt);
-  const result = await runWorkflow(state);
-  res.json(result);
+app.get("/health", (_req, res) => {
+  res.json({ status: "ok" });
 });
 
-app.listen(3000, () => {
-  console.log("🚀 Running on http://localhost:3000");
+app.listen(PORT, () => {
+  console.log(`Running on http://localhost:${PORT}`);
 });
